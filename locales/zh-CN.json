@@ -1,0 +1,11 @@
+{
+  "action.name": "图片文字",
+  "setup.label": "设置 PS 脚本",
+  "hint.pick_region": "框选要识别的图片区域",
+  "hint.ps_setup_required": "请在动作设置中点击「设置 PS 脚本」，把 image_text.jsx 安装到 Photoshop 的脚本目录后再运行。",
+  "error.cancelled": "已取消",
+  "error.no_text": "没有识别到文字",
+  "error.ps_unavailable": "无法运行 Photoshop 脚本，请确认已安装并启动 Photoshop。",
+  "error.ps_setup_required": "还没有安装 Photoshop 脚本。",
+  "progress.creating_layers": "正在创建 %s 个文字图层"
+}

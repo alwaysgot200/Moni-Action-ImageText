@@ -1,0 +1,61 @@
+{
+  "schema": "moni-action-v1",
+  "id": "ps.image-to-text",
+  "version": "1.1.0",
+  "display": { "key": "action.name" },
+  "type": "script",
+  "engine": { "name": "lua", "version": "5.4" },
+  "entry": "main.lua",
+  "setup": {
+    "entry": "setup.lua",
+    "label": { "key": "setup.label" }
+  },
+  "compat": {
+    "platforms": ["windows", "macos"],
+    "arch": ["any"],
+    "host": ">=0.5.0 <1.0.0",
+    "features": ["ocr.ppocr>=1", "ps.jsx>=1"],
+    "apps": [{ "id": "photoshop", "min": "22.0" }]
+  },
+  "permissions": [
+    "screen.capture",
+    "ocr.run",
+    "process.spawn:photoshop",
+    "process.spawn:osascript"
+  ],
+  "programs": [
+    {
+      "id": "photoshop",
+      "candidates": [
+        "%ProgramFiles%/Adobe Photoshop*/Photoshop.exe",
+        "%ProgramFiles(x86)%/Adobe Photoshop*/Photoshop.exe"
+      ]
+    },
+    {
+      "id": "osascript",
+      "candidates": ["/usr/bin/osascript"]
+    }
+  ],
+  "options": {
+    "lang": { "type": "string", "default": "ch" },
+    "min_score": { "type": "number", "default": 0.5, "min": 0, "max": 1 },
+    "font": { "type": "string", "default": "SourceHanSansSC-Regular" },
+    "fit_mode": {
+      "type": "enum",
+      "values": ["auto", "height", "width"],
+      "default": "height"
+    },
+    "color_mode": {
+      "type": "enum",
+      "values": ["sample", "black", "white"],
+      "default": "sample"
+    },
+    "calibration": {
+      "type": "enum",
+      "values": ["normalized", "selection"],
+      "default": "normalized"
+    },
+    "group": { "type": "boolean", "default": true }
+  },
+  "ui": { "icon": "ocr", "group": "photoshop" }
+}

@@ -1,0 +1,11 @@
+{
+  "action.name": "Image to Text",
+  "setup.label": "Set up PS script",
+  "hint.pick_region": "Drag to select the image area to recognize",
+  "hint.ps_setup_required": "Open the action settings and click \"Set up PS script\" to install image_text.jsx into Photoshop's Scripts folder.",
+  "error.cancelled": "Cancelled",
+  "error.no_text": "No text was recognized",
+  "error.ps_unavailable": "Photoshop scripting is unavailable. Make sure Photoshop is installed and running.",
+  "error.ps_setup_required": "The Photoshop script is not installed yet.",
+  "progress.creating_layers": "Creating %s text layers"
+}
