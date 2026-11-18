@@ -6,7 +6,7 @@ Moni 的第三方动作示例：**框选图片 → OCR → 在 Photoshop 当前�
 
 - Moni 动作（Lua）与选项 schema；
 - 动作自带的 Photoshop 脚本（ExtendScript / JSX）；
-- 动作自己的「设置 PS 脚本」入口（`setup.lua`）；
+- 动作自己的「设置 PS 脚本」入口（`setup.lua`）；运行时缺脚本会自动安装，该入口用于重装/修复；
 - 纯 JS 单元测试（`node --test`）。
 
 > 设计原则：**外部软件的安装/检查是动作自己的工作，不是 Moni 的工作。**
@@ -17,28 +17,31 @@ Moni 的第三方动作示例：**框选图片 → OCR → 在 Photoshop 当前�
 
 ```
 用户框选
-  └─ 动作检查 PS 脚本是否已安装（自带 runner 执行 ps/setup.jsx mode=check）
-       ├─ 未安装 → 返回 A500_ACTION_FAILED（hint），提示用户去动作设置里点「设置 PS 脚本」
-       └─ 已安装 → 截屏 → OCR → 自带 runner 执行 ps/image_text.jsx
-                       └─ PS 当前文档中创建文字图层 / 组，一次 Ctrl+Z 可撤销
+  └─ 动作检查 PS 是否在线（不在线且允许则拉起）
+       └─ 检查 PS 脚本（自带 runner 执行 ps/setup.jsx mode=check）
+            ├─ 未安装 → 自动执行 mode=install，成功则继续
+            └─ 已安装/安装成功 → 截屏 → OCR → 自带 runner 执行 ps/image_text.jsx
+                 └─ PS 当前文档中创建文字图层 / 组，一次 Ctrl+Z 可撤销
 ```
 
 ## 前置条件
 
 - Moni（内置动作运行时，支持 `ctx.process.run` / `ctx.fs`）；
-- Photoshop 22.0+（Windows 或 macOS），建议先启动并打开一个文档；
+- Photoshop 22.0+（Windows 或 macOS），建议先启动并打开一个文档；未启动时动作会按选项
+  `launch_app` 自行拉起；
+- PS 脚本无需手动安装：第一次点「运行」会自动装好；
 - macOS 首次调用会弹系统「自动化」授权，需要允许 Moni 控制 Photoshop。
 
 ## 安装动作
 
-把本仓库目录作为动作包导入 Moni（`action.json` 在仓库根目录）。导入后在动作设置里点击
-**「设置 PS 脚本」**，动作会调用自己的 `setup.lua` → `ps/setup.jsx`，把
-`image_text.jsx` 复制到：
+把本仓库目录作为动作包导入 Moni（`action.json` 在仓库根目录）。导入后直接运行即可：
+动作会调用自己的 `setup.lua` → `ps/setup.jsx`，在需要时把 `image_text.jsx` 复制到：
 
 - Windows：`%APPDATA%\Adobe\Adobe Photoshop <版本>\Presets\Scripts\Moni\ps.image-to-text\`
 - macOS：`~/Library/Application Support/Adobe/Adobe Photoshop <版本>/Presets/Scripts/Moni/ps.image-to-text/`
 
-装好后可从 Photoshop 的「文件 > 脚本」手动运行，也可直接由动作自动调用。
+动作设置里的「设置 PS 脚本」用于重装/修复。安装器会同时尝试程序目录与用户目录，
+某个目录只读（例如 PS 以管理员运行）不会影响用户目录写入。
 
 ## 权限
 
@@ -93,7 +96,7 @@ node --test "tests/**/*.test.mjs"
 
 | 现象 | 原因 / 处理 |
 |---|---|
-| `A500_ACTION_FAILED` + hint「还没有安装 Photoshop 脚本」 | 还没安装 PS 脚本：动作设置 →「设置 PS 脚本」 |
+| `A500_ACTION_FAILED` + hint「自动安装 PS 脚本失败」 | 确认 PS 已正常启动后重试；仍失败再到动作设置点「设置 PS 脚本」 |
 | `A407_PS_OFFLINE` | 找不到 Photoshop；安装后启动一次，或让动作 `programs.photoshop.candidates` 覆盖你的安装路径 |
 | `A401_PS_NO_DOC` | Photoshop 里没有打开的文档 |
 | 文字位置/字号有偏差 | `fit_mode=height` 是快速拟合；对精度要求高时用 `selection` 校准或手动调整 |

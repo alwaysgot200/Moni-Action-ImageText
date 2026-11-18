@@ -1,7 +1,7 @@
 {
   "schema": "moni-action-v1",
   "id": "ps.image-to-text",
-  "version": "1.1.0",
+  "version": "1.2.2",
   "display": { "key": "action.name" },
   "type": "script",
   "engine": { "name": "lua", "version": "5.4" },
@@ -17,9 +17,11 @@
     "features": ["ocr.ppocr>=1", "ps.jsx>=1"],
     "apps": [{ "id": "photoshop", "min": "22.0" }]
   },
+  "applies_to": ["photoshop"],
   "permissions": [
     "screen.capture",
     "ocr.run",
+    "notify",
     "process.spawn:photoshop",
     "process.spawn:osascript"
   ],
@@ -27,8 +29,11 @@
     {
       "id": "photoshop",
       "candidates": [
+        "%ProgramFiles%/Adobe/Adobe Photoshop*/Photoshop.exe",
         "%ProgramFiles%/Adobe Photoshop*/Photoshop.exe",
-        "%ProgramFiles(x86)%/Adobe Photoshop*/Photoshop.exe"
+        "%ProgramFiles(x86)%/Adobe/Adobe Photoshop*/Photoshop.exe",
+        "%ProgramFiles(x86)%/Adobe Photoshop*/Photoshop.exe",
+        "/Applications/Adobe Photoshop*/Adobe Photoshop*.app/Contents/MacOS/Adobe Photoshop*"
       ]
     },
     {
@@ -37,25 +42,39 @@
     }
   ],
   "options": {
-    "lang": { "type": "string", "default": "ch" },
-    "min_score": { "type": "number", "default": 0.5, "min": 0, "max": 1 },
-    "font": { "type": "string", "default": "SourceHanSansSC-Regular" },
+    "launch_app": { "type": "boolean", "default": true, "label_key": "options.launch_app" },
+    "lang": {
+      "type": "string",
+      "default": "ch",
+      "label_key": "options.lang"
+    },
+    "min_score": {
+      "type": "number",
+      "default": 0.5,
+      "min": 0,
+      "max": 1,
+      "label_key": "options.min_score"
+    },
+    "font": { "type": "string", "default": "SourceHanSansSC-Regular", "label_key": "options.font" },
     "fit_mode": {
       "type": "enum",
       "values": ["auto", "height", "width"],
-      "default": "height"
+      "default": "height",
+      "label_key": "options.fit_mode"
     },
     "color_mode": {
       "type": "enum",
       "values": ["sample", "black", "white"],
-      "default": "sample"
+      "default": "sample",
+      "label_key": "options.color_mode"
     },
     "calibration": {
       "type": "enum",
       "values": ["normalized", "selection"],
-      "default": "normalized"
+      "default": "normalized",
+      "label_key": "options.calibration"
     },
-    "group": { "type": "boolean", "default": true }
+    "group": { "type": "boolean", "default": true, "label_key": "options.group" }
   },
   "ui": { "icon": "ocr", "group": "photoshop" }
 }
