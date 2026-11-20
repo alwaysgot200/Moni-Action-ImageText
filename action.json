@@ -1,23 +1,94 @@
 {
-  "schema": "moni-action-v1",
-  "id": "ps.image-to-text",
-  "version": "1.2.2",
-  "display": { "key": "action.name" },
-  "type": "script",
-  "engine": { "name": "lua", "version": "5.4" },
-  "entry": "main.lua",
-  "setup": {
-    "entry": "setup.lua",
-    "label": { "key": "setup.label" }
-  },
+  "applies_to": [
+    "photoshop"
+  ],
   "compat": {
-    "platforms": ["windows", "macos"],
-    "arch": ["any"],
+    "apps": [
+      {
+        "id": "photoshop",
+        "min": "22.0"
+      }
+    ],
+    "arch": [
+      "any"
+    ],
+    "features": [
+      "ocr.ppocr>=1",
+      "ps.jsx>=1"
+    ],
     "host": ">=0.1.0 <2.0.0",
-    "features": ["ocr.ppocr>=1", "ps.jsx>=1"],
-    "apps": [{ "id": "photoshop", "min": "22.0" }]
+    "platforms": [
+      "windows",
+      "macos"
+    ]
   },
-  "applies_to": ["photoshop"],
+  "display": {
+    "key": "action.name"
+  },
+  "engine": {
+    "name": "lua",
+    "version": "5.4"
+  },
+  "entry": "main.lua",
+  "id": "1b5c3d10ef7340408a9ea6aaaf43fdb1",
+  "options": {
+    "calibration": {
+      "default": "normalized",
+      "label_key": "options.calibration",
+      "type": "enum",
+      "values": [
+        "normalized",
+        "selection"
+      ]
+    },
+    "color_mode": {
+      "default": "sample",
+      "label_key": "options.color_mode",
+      "type": "enum",
+      "values": [
+        "sample",
+        "black",
+        "white"
+      ]
+    },
+    "fit_mode": {
+      "default": "height",
+      "label_key": "options.fit_mode",
+      "type": "enum",
+      "values": [
+        "auto",
+        "height",
+        "width"
+      ]
+    },
+    "font": {
+      "default": "SourceHanSansSC-Regular",
+      "label_key": "options.font",
+      "type": "string"
+    },
+    "group": {
+      "default": true,
+      "label_key": "options.group",
+      "type": "boolean"
+    },
+    "lang": {
+      "default": "ch",
+      "label_key": "options.lang",
+      "type": "string"
+    },
+    "launch_app": {
+      "default": true,
+      "label_key": "options.launch_app",
+      "type": "boolean"
+    },
+    "min_score": {
+      "default": 0.5,
+      "label_key": "options.min_score",
+      "max": 1,
+      "min": 0,
+      "type": "number"
+    }
+  },
   "permissions": [
     "screen.capture",
     "ocr.run",
@@ -27,54 +98,33 @@
   ],
   "programs": [
     {
-      "id": "photoshop",
       "candidates": [
         "%ProgramFiles%/Adobe/Adobe Photoshop*/Photoshop.exe",
         "%ProgramFiles%/Adobe Photoshop*/Photoshop.exe",
         "%ProgramFiles(x86)%/Adobe/Adobe Photoshop*/Photoshop.exe",
         "%ProgramFiles(x86)%/Adobe Photoshop*/Photoshop.exe",
         "/Applications/Adobe Photoshop*/Adobe Photoshop*.app/Contents/MacOS/Adobe Photoshop*"
-      ]
+      ],
+      "id": "photoshop"
     },
     {
-      "id": "osascript",
-      "candidates": ["/usr/bin/osascript"]
+      "candidates": [
+        "/usr/bin/osascript"
+      ],
+      "id": "osascript"
     }
   ],
-  "options": {
-    "launch_app": { "type": "boolean", "default": true, "label_key": "options.launch_app" },
-    "lang": {
-      "type": "string",
-      "default": "ch",
-      "label_key": "options.lang"
-    },
-    "min_score": {
-      "type": "number",
-      "default": 0.5,
-      "min": 0,
-      "max": 1,
-      "label_key": "options.min_score"
-    },
-    "font": { "type": "string", "default": "SourceHanSansSC-Regular", "label_key": "options.font" },
-    "fit_mode": {
-      "type": "enum",
-      "values": ["auto", "height", "width"],
-      "default": "height",
-      "label_key": "options.fit_mode"
-    },
-    "color_mode": {
-      "type": "enum",
-      "values": ["sample", "black", "white"],
-      "default": "sample",
-      "label_key": "options.color_mode"
-    },
-    "calibration": {
-      "type": "enum",
-      "values": ["normalized", "selection"],
-      "default": "normalized",
-      "label_key": "options.calibration"
-    },
-    "group": { "type": "boolean", "default": true, "label_key": "options.group" }
+  "schema": "moni-action-v2",
+  "setup": {
+    "entry": "setup.lua",
+    "label": {
+      "key": "setup.label"
+    }
   },
-  "ui": { "icon": "ocr", "group": "photoshop" }
+  "type": "script",
+  "ui": {
+    "group": "photoshop",
+    "icon": "ocr"
+  },
+  "version": "1.2.2"
 }
